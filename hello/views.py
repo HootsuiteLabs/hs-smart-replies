@@ -39,7 +39,9 @@ def get_articles(request):
 
 # AI API endpoint
 def get_replies(request):
-    return "Here is your first reply!"
+    response = {'message': 'your first reply!!'}
+    return HttpResponse(json.dumps(response),
+                            content_type="application/json");
 
 # AI API endpoint
 def get_topics(request):
