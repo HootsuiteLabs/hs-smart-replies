@@ -38,6 +38,10 @@ def get_articles(request):
                             content_type="application/json");
 
 # AI API endpoint
+def get_replies(request):
+    return "Here is your first reply!"
+
+# AI API endpoint
 def get_topics(request):
     url = "https://api.twitter.com/1.1/statuses/user_timeline.json"
     querystring = {"screen_name":"mozhacks"}
