@@ -10,6 +10,7 @@ import hello.views
 # url(r'^blog/', include('blog.urls')),
 
 urlpatterns = [
+    url(r'^replies/', hello.views.get_replies, name='replies'),
     url(r'^articles/', hello.views.get_articles, name='articles'),
     url(r'^topics/', hello.views.get_topics, name='topics'),
     url(r'^$', hello.views.index, name='index')
