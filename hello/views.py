@@ -73,6 +73,8 @@ def get_sentiment(text):
         "text": text,
         "outputMode": "json"}
     sentiment_analysis = requests.request("GET", url, params=querystring)
+    print 'sentiment AJAX call!!!!!'
+    print sentiment_analysis.json()
     return sentiment_analysis.json().get('docSentiment', {})
 
 def get_keywords(text):
@@ -97,6 +99,8 @@ def get_intent(text):
 def get_replies(request):
     text = request.GET.get('text','')
     sentiment = get_sentiment(text)
+    print 'sentiment is!!!!!!!!!!'
+    print sentiment
     top_scoring_intent = get_intent(text)
     keywords = get_keywords(text)
     response = {
