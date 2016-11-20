@@ -20,19 +20,25 @@ SORRY = [
   'Sorry to hear that. ',
   'I am very sorry. ',
   'Oooops! Our bad. ',
-  'Apologies. '
+  'Apologies. ',
+  'Oh no! Sorry about that. '
 ];
 
 PROBLEM = [
   'Our support team is now aware of this issue. #stayTuned ',
   'We have filed a report in our system. Please stay tuned. ',
-  'Our very smart engineers are working on this. Stay tuned! '
+  'Our very smart engineers are working on this. Stay tuned! ',
+  'I will let the right people know so they can fix this ASAP!'
 ];
 
 YOU_ARE_WELCOME = [
   'You are welcome! ',
   'Glad we could help! ',
-  'My pleasure! '
+  'My pleasure! ',
+  'Not a problem! ',
+  'Anytime! ',
+  'You got it! ',
+  'No worries! '
 ]
 
 CRITICISM = [
@@ -43,9 +49,11 @@ CRITICISM = [
 ];
 
 INTEREST = [
-  "Let's connect, I can help you find what you are looking for. ",
-  "I think I can help you with that! I'll DM you some details. ",
-  "Our product may be the perfect fit for you. Let's connect! "
+  "Let's get in touch, I can help you find what you are looking for. ",
+  "I think I can help you with that! I'll send you some details if that's OK with you. ",
+  "Our product may be the perfect fit for you. Let's connect! ",
+  "We have a product that may work for you. What's the best way I can contact you? ",
+  "I may be able to point you to the right direction. Feel free to message me directly. "
 ]
 
 def randomizer(action):
