@@ -72,7 +72,7 @@ def get_replies(request):
         'replies': ['your first reply!!', 'your second reply'],
         'sentiment': get_sentiment(text),
         'keywords': get_keywords(text),
-        'intent': get_intent(text)
+        'topScoringIntent': get_intent(text)
     }
     return HttpResponse(json.dumps(response),
                             content_type="application/json");
