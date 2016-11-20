@@ -104,7 +104,7 @@ def get_replies(request):
     doc_sentiment = sentiment.get('docSentiment', {})
     intent = get_intent(text)
     top_scoring_intent = intent.get('topScoringIntent',{})
-    keywords = [{'text': ''}] #get_keywords(text)
+    keywords = {} #get_keywords(text)
     doc_keywords = keywords.get('keywords', [{'text': ''}])
     if doc_keywords == {} or len(doc_keywords) < 1:
       # not likely, but sometimes it happens (when a API error occurs)
