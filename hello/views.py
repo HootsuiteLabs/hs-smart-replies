@@ -52,7 +52,7 @@ def get_replies(request):
     response = {
         'originalText': text,
         'replies': ['your first reply!!', 'your second reply'],
-        'targetedSentiment': get_sentiment(text)
+        'sentiment': get_sentiment(text)
     }
     return HttpResponse(json.dumps(response),
                             content_type="application/json");
