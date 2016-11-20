@@ -14,7 +14,7 @@
   // JQuery stuff
   $(document).ready(function(){
       $("#suggest").click(function(){
-          $.getJSON( "replies?text=" + $('#tweet').val();, function(data) {
+          $.getJSON( "replies?text=" + $('#tweet').val(), function(data) {
             if (data.replies) {
               console.log(data);
               reply = data.replies[0];
