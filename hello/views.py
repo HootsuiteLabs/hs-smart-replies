@@ -82,7 +82,7 @@ def get_keywords(text):
         "text": text,
         "outputMode": "json"}
     keywords = requests.request("GET", url, params=querystring)
-    return keywords.json().get('keywords', [''])
+    return keywords.json().get('keywords', [{'text': ''}])
 
 def get_intent(text):
     url = "https://api.projectoxford.ai/luis/v2.0/apps/2e6694e2-a7bb-486f-b2eb-ec6df5ac5041"
