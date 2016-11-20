@@ -1,22 +1,70 @@
 import json
+import random
 import requests
 
 from django.shortcuts import render
 from django.http import HttpResponse
 
-# Main view
-def index(request):
-    return render(request, 'index.html')
+THANK_YOU = [
+  'Thank you very much!',
+  'Awwwww, thank you :-) ',
+  'Thanks!!! ',
+  'That is very nice of you! '
+]
 
-def get_topics_for_tweet(text):
-    url = "https://gateway-a.watsonplatform.net/calls/text/TextGetRankedTaxonomy"
-    querystring = {
-        "apikey":"3f2b08f9bf2c5f59a2d7b2d61dd95890a80fb2b6",
-        "text":text,
-        "outputMode":"json"}
-    text_analysis = requests.request("GET", url, params=querystring)
-    topics = text_analysis.json()['taxonomy'][0].get('label', '/')[1:].split("/")
-    return topics
+SORRY = [
+  'Sorry to hear that. ',
+  'I am very sorry. ',
+  'Oooops! Our bad. ',
+  'Apologies. '
+];
+
+PROBLEM = [
+  'Our support team is now aware of this issue. #stayTuned ',
+  'We have filed a report in our system. Please stay tuned. ',
+  'Our very smart engineers are working on this. Stay tuned! '
+];
+
+YOU_ARE_WELCOME = [
+  'You are welcome! ',
+  'Glad we could help! ',
+  'My pleasure! '
+]
+
+CRITICISM = [
+  'Thank you for your feedback, we are working hard to serve you better. ',
+  'Loud and clear. We will try harder next time. ',
+  'We appreciate your honesty. ',
+  'We value your honest feedback. '
+];
+
+INTEREST = [
+  "Let's connect, I can help you find what you are looking for. ",
+  "I think I can help you with that! I'll DM you some details. ",
+  "Our product may be the perfect fit for you. Let's connect! "
+]
+
+def randomizer(action):
+  return random.choice(action)
+
+def get_sentence(text, sentiment, intent, keyword):
+  sentence = ''
+  if intent == 'interest':
+    return randomizer(INTEREST)
+  if sentiment == 'negative':
+    sentence = randomizer(SORRY)
+  elif sentiment == 'positive':
+    if 'thank you' in text:
+      return randomizer(YOU_ARE_WELCOME)
+    elif intent == 'compliment':
+      return randomizer(THANK_YOU)
+  if intent == 'problem':
+    return sentence + randomizer(PROBLEM)
+  if intent == 'criticism':
+    return sentence + randomizer(CRITICISM)
+  if intent == 'how-to':
+    return sentence + 'I will DM you some help documents about ' + keyword
+  return sentence
 
 def get_sentiment(text):
     url = "https://gateway-a.watsonplatform.net/calls/text/TextGetTextSentiment"
@@ -34,7 +82,7 @@ def get_keywords(text):
         "text": text,
         "outputMode": "json"}
     keywords = requests.request("GET", url, params=querystring)
-    return keywords.json().get('keywords',{})
+    return keywords.json().get('keywords', [''])
 
 def get_intent(text):
     url = "https://api.projectoxford.ai/luis/v2.0/apps/2e6694e2-a7bb-486f-b2eb-ec6df5ac5041"
@@ -45,64 +93,22 @@ def get_intent(text):
     intent = requests.request("GET", url, params=querystring)
     return intent.json().get('topScoringIntent',{})
 
-# Content discovery API endpoint
-def get_articles(request):
-    topics = request.GET.get('topics','Marketing,Social_Media')
-    url = "https://aras.hootsuite.com/articles"
-    querystring = {"q": topics}
-    response = {}
-
-    try:
-        aras_response = requests.request("GET", url, params=querystring)
-        response['result'] = aras_response.json()
-        response['message'] = ''
-        return HttpResponse(json.dumps(response),
-                            content_type="application/json");
-    except:
-        response['result'] = {}
-        response['message'] = 'Content Source Error.'
-        return HttpResponse(json.dumps(response),
-                            content_type="application/json");
-
 # AI API endpoint
 def get_replies(request):
     text = request.GET.get('text','')
+    sentiment = get_sentiment(text)
+    top_scoring_intent = get_intent(text)
+    keyworks = get_keywords(text)
     response = {
         'originalText': text,
-        'replies': ['your first reply!!', 'your second reply'],
-        'sentiment': get_sentiment(text),
-        'keywords': get_keywords(text),
-        'topScoringIntent': get_intent(text)
+        'replies': [get_sentence(text, sentiment.get('type'), top_scoring_intent.get('intent'), keywords[0].get('text'))],
+        'sentiment': sentiment,
+        'keywords': keywords,
+        'topScoringIntent': top_scoring_intent
     }
     return HttpResponse(json.dumps(response),
                             content_type="application/json");
 
-# AI API endpoint
-def get_topics(request):
-    url = "https://api.twitter.com/1.1/statuses/user_timeline.json"
-    querystring = {"screen_name":"mozhacks"}
-    headers = {
-        'authorization': "Bearer AAAAAAAAAAAAAAAAAAAAALYVxQAAAAAArsFh33H%2BFhZWl27Tn0vmsgxXBDs%3DzMUgdB9LjfL2JyefZn2GiWkGjmhirPyvkciA4mrX6MjP8eKaPz",
-        'cache-control': "no-cache"        }
-    twitter_response = requests.request("GET", url,
-                                        headers=headers, params=querystring)
-
-    # extract the last 10 tweets
-    messages = list()
-    i = 1
-    for tweet in twitter_response.json():
-        if (i > 3):
-            break
-        messages.append(tweet.get('text', ''))
-        i = i +1
-    print messages
-    topics = list()
-    for message in messages:
-        topics.extend(get_topics_for_tweet(message))
-    topic = max(set(topics), key=topics.count)
-
-    response = {}
-    response['result'] = {'topics': topic}
-    response['message'] = ''
-    return HttpResponse(json.dumps(response),
-                        content_type="application/json");
+# Main view
+def index(request):
+    return render(request, 'index.html')
