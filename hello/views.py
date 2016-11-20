@@ -21,20 +21,29 @@ def get_topics_for_tweet(text):
 def get_sentiment(text):
     url = "https://gateway-a.watsonplatform.net/calls/text/TextGetTextSentiment"
     querystring = {
-        "apikey":"3f2b08f9bf2c5f59a2d7b2d61dd95890a80fb2b6",
-        "text":text,
-        "outputMode":"json"}
+        "apikey": "3f2b08f9bf2c5f59a2d7b2d61dd95890a80fb2b6",
+        "text": text,
+        "outputMode": "json"}
     sentiment_analysis = requests.request("GET", url, params=querystring)
     return sentiment_analysis.json().get('docSentiment', {})
 
 def get_keywords(text):
     url = "https://gateway-a.watsonplatform.net/calls/text/TextGetRankedKeywords"
     querystring = {
-        "apikey":"3f2b08f9bf2c5f59a2d7b2d61dd95890a80fb2b6",
-        "text":text,
-        "outputMode":"json"}
+        "apikey": "3f2b08f9bf2c5f59a2d7b2d61dd95890a80fb2b6",
+        "text": text,
+        "outputMode": "json"}
     keywords = requests.request("GET", url, params=querystring)
     return keywords.json().get('keywords',{})
+
+def get_intent(text):
+    url = "https://api.projectoxford.ai/luis/v2.0/apps/2e6694e2-a7bb-486f-b2eb-ec6df5ac5041"
+    querystring = {
+        "subscription-key": "d85f1326ee7f4935afc434db40db18b3",
+        "q": text,
+        "verbose": True}
+    intent = requests.request("GET", url, params=querystring)
+    return intent.json().get('topScoringIntent',{})
 
 # Content discovery API endpoint
 def get_articles(request):
@@ -62,7 +71,8 @@ def get_replies(request):
         'originalText': text,
         'replies': ['your first reply!!', 'your second reply'],
         'sentiment': get_sentiment(text),
-        'keywords': get_keywords(text)
+        'keywords': get_keywords(text),
+        'intent': get_intent(text)
     }
     return HttpResponse(json.dumps(response),
                             content_type="application/json");
