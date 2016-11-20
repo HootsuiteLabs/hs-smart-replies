@@ -18,6 +18,15 @@ def get_topics_for_tweet(text):
     topics = text_analysis.json()['taxonomy'][0].get('label', '/')[1:].split("/")
     return topics
 
+def get_targeted_sentiment(text):
+    url = "https://gateway-a.watsonplatform.net/calls/text/TextGetTargetedSentiment"
+    querystring = {
+        "apikey":"3f2b08f9bf2c5f59a2d7b2d61dd95890a80fb2b6",
+        "text":text,
+        "outputMode":"json"}
+    sentiment_analysis = requests.request("GET", url, params=querystring)
+    return sentiment_analysis.json()
+
 # Content discovery API endpoint
 def get_articles(request):
     topics = request.GET.get('topics','Marketing,Social_Media')
@@ -43,7 +52,7 @@ def get_replies(request):
     response = {
         'originalText': text,
         'replies': ['your first reply!!', 'your second reply'],
-        'targetedSentiment': {}
+        'targetedSentiment': get_targeted_sentiment(text)
     }
     return HttpResponse(json.dumps(response),
                             content_type="application/json");
