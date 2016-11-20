@@ -14,7 +14,17 @@
   // JQuery stuff
   $(document).ready(function(){
       $("#suggest").click(function(){
-          alert('suggesting');
+          $.getJSON( "replies?text=" + $('#tweet').val();, function(data) {
+            if (data.replies) {
+              console.log(data);
+              reply = data.replies[0];
+              $('#reply').val(reply);
+            } else {
+              console.log('no replies!');
+              console.log(data);
+              $('#reply').val('');
+            }
+          });
       });
   });
   </script>
