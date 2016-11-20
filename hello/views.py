@@ -54,7 +54,7 @@ def get_sentence(text, sentiment, intent, keyword):
   if sentiment == 'negative':
     sentence = randomizer(SORRY)
   elif sentiment == 'positive':
-    if 'thank you' in text:
+    if 'thank' in text:
       return randomizer(YOU_ARE_WELCOME)
     elif intent == 'compliment':
       return randomizer(THANK_YOU)
