@@ -34,7 +34,7 @@ def get_keywords(text):
         "text":text,
         "outputMode":"json"}
     keywords = requests.request("GET", url, params=querystring)
-    return sentiment_analysis.json()['keywords']
+    return keywords.json()['keywords']
 
 # Content discovery API endpoint
 def get_articles(request):
