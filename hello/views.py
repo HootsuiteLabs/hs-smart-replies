@@ -1,9 +1,13 @@
 import json
+import os
 import random
 import requests
 
 from django.shortcuts import render
 from django.http import HttpResponse
+
+WATSON_API_KEY = os.environ['WATSON_API_KEY']
+LUIS_API_KEY = os.environ['LUIS_API_KEY']
 
 THANK_YOU = [
   'Thank you very much!',
@@ -69,7 +73,7 @@ def get_sentence(text, sentiment, intent, keyword):
 def get_sentiment(text):
     url = "https://gateway-a.watsonplatform.net/calls/text/TextGetTextSentiment"
     querystring = {
-        "apikey": "3f2b08f9bf2c5f59a2d7b2d61dd95890a80fb2b6",
+        "apikey": WATSON_API_KEY,
         "text": text,
         "outputMode": "json"}
     sentiment_analysis = requests.request("GET", url, params=querystring)
@@ -78,7 +82,7 @@ def get_sentiment(text):
 def get_keywords(text):
     url = "https://gateway-a.watsonplatform.net/calls/text/TextGetRankedKeywords"
     querystring = {
-        "apikey": "3f2b08f9bf2c5f59a2d7b2d61dd95890a80fb2b6",
+        "apikey": WATSON_API_KEY,
         "text": text,
         "outputMode": "json"}
     keywords = requests.request("GET", url, params=querystring)
@@ -87,7 +91,7 @@ def get_keywords(text):
 def get_intent(text):
     url = "https://api.projectoxford.ai/luis/v2.0/apps/2e6694e2-a7bb-486f-b2eb-ec6df5ac5041"
     querystring = {
-        "subscription-key": "d85f1326ee7f4935afc434db40db18b3",
+        "subscription-key": LUIS_API_KEY,
         "q": text,
         "verbose": True}
     intent = requests.request("GET", url, params=querystring)
