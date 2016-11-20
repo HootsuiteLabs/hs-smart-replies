@@ -63,7 +63,7 @@ def get_sentence(text, sentiment, intent, keyword):
   if intent == 'criticism':
     return sentence + randomizer(CRITICISM)
   if intent == 'how-to':
-    return sentence + 'I will DM you some help documents about ' + keyword
+    return sentence + 'I will DM you some info to help you out with this!'
   return sentence
 
 def get_sentiment(text):
