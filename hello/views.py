@@ -96,18 +96,21 @@ def get_intent(text):
 # AI API endpoint
 def get_replies(request):
     text = request.GET.get('text','')
-    sentiment = get_sentiment(text).get('docSentiment', {})
-    top_scoring_intent = get_intent(text).get('topScoringIntent',{})
-    keywords = get_keywords(text).get('keywords', [{'text': ''}])
-    if keywords == {}:
+    sentiment = get_sentiment(text)
+    doc_sentiment = sentiment.get('docSentiment', {})
+    intent = get_intent(text)
+    top_scoring_intent = intent.get('topScoringIntent',{})
+    keywords = get_keywords(text)
+    doc_keywords = keywords.get('keywords', [{'text': ''}])
+    if doc_keywords == {}:
       # not likely, but sometimes it happens (when a API error occurs)
-      keywords = [{'text': ''}]
+      doc_keywords = [{'text': ''}]
     response = {
         'originalText': text,
-        'replies': [get_sentence(text, sentiment.get('type'), top_scoring_intent.get('intent'), keywords[0].get('text'))],
+        'replies': [get_sentence(text, doc_sentiment.get('type'), top_scoring_intent.get('intent'), doc_keywords[0].get('text'))],
         'sentiment': sentiment,
         'keywords': keywords,
-        'topScoringIntent': top_scoring_intent
+        'intent': intent
     }
     return HttpResponse(json.dumps(response),
                             content_type="application/json");
