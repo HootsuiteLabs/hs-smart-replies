@@ -106,7 +106,7 @@ def get_replies(request):
     top_scoring_intent = intent.get('topScoringIntent',{})
     keywords = get_keywords(text)
     doc_keywords = keywords.get('keywords', [{'text': ''}])
-    if doc_keywords == {}:
+    if doc_keywords == {} or len(doc_keywords) < 1:
       # not likely, but sometimes it happens (when a API error occurs)
       doc_keywords = [{'text': ''}]
     response = {
