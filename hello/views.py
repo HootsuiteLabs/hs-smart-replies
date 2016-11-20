@@ -25,7 +25,7 @@ def get_sentiment(text):
         "text":text,
         "outputMode":"json"}
     sentiment_analysis = requests.request("GET", url, params=querystring)
-    return sentiment_analysis.json()['docSentiment']
+    return sentiment_analysis.json().get('docSentiment', {})
 
 def get_keywords(text):
     url = "https://gateway-a.watsonplatform.net/calls/text/TextGetRankedKeywords"
@@ -34,7 +34,7 @@ def get_keywords(text):
         "text":text,
         "outputMode":"json"}
     keywords = requests.request("GET", url, params=querystring)
-    return keywords.json()['keywords']
+    return keywords.json().get('keywords',{})
 
 # Content discovery API endpoint
 def get_articles(request):
