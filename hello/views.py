@@ -27,6 +27,15 @@ def get_sentiment(text):
     sentiment_analysis = requests.request("GET", url, params=querystring)
     return sentiment_analysis.json()['docSentiment']
 
+def get_keywords(text):
+    url = "https://gateway-a.watsonplatform.net/calls/text/TextGetRankedKeywords"
+    querystring = {
+        "apikey":"3f2b08f9bf2c5f59a2d7b2d61dd95890a80fb2b6",
+        "text":text,
+        "outputMode":"json"}
+    keywords = requests.request("GET", url, params=querystring)
+    return sentiment_analysis.json()['keywords']
+
 # Content discovery API endpoint
 def get_articles(request):
     topics = request.GET.get('topics','Marketing,Social_Media')
@@ -52,7 +61,8 @@ def get_replies(request):
     response = {
         'originalText': text,
         'replies': ['your first reply!!', 'your second reply'],
-        'sentiment': get_sentiment(text)
+        'sentiment': get_sentiment(text),
+        'keywords': get_keywords(text)
     }
     return HttpResponse(json.dumps(response),
                             content_type="application/json");
