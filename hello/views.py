@@ -39,7 +39,12 @@ def get_articles(request):
 
 # AI API endpoint
 def get_replies(request):
-    response = {'replies': ['your first reply!!', 'your second reply']}
+    text = request.GET.get('text','')
+    response = {
+        'originalText': text,
+        'replies': ['your first reply!!', 'your second reply'],
+        'targetedSentiment': {}
+    }
     return HttpResponse(json.dumps(response),
                             content_type="application/json");
 
