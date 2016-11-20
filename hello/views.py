@@ -98,7 +98,7 @@ def get_replies(request):
     text = request.GET.get('text','')
     sentiment = get_sentiment(text)
     top_scoring_intent = get_intent(text)
-    keyworks = get_keywords(text)
+    keywords = get_keywords(text)
     response = {
         'originalText': text,
         'replies': [get_sentence(text, sentiment.get('type'), top_scoring_intent.get('intent'), keywords[0].get('text'))],
