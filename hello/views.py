@@ -73,9 +73,7 @@ def get_sentiment(text):
         "text": text,
         "outputMode": "json"}
     sentiment_analysis = requests.request("GET", url, params=querystring)
-    print 'sentiment AJAX call!!!!!'
-    print sentiment_analysis.json()
-    return sentiment_analysis.json().get('docSentiment', {})
+    return sentiment_analysis.json()
 
 def get_keywords(text):
     url = "https://gateway-a.watsonplatform.net/calls/text/TextGetRankedKeywords"
@@ -84,7 +82,7 @@ def get_keywords(text):
         "text": text,
         "outputMode": "json"}
     keywords = requests.request("GET", url, params=querystring)
-    return keywords.json().get('keywords', [{'text': ''}])
+    return keywords.json()
 
 def get_intent(text):
     url = "https://api.projectoxford.ai/luis/v2.0/apps/2e6694e2-a7bb-486f-b2eb-ec6df5ac5041"
@@ -93,16 +91,17 @@ def get_intent(text):
         "q": text,
         "verbose": True}
     intent = requests.request("GET", url, params=querystring)
-    return intent.json().get('topScoringIntent',{})
+    return intent.json()
 
 # AI API endpoint
 def get_replies(request):
     text = request.GET.get('text','')
-    sentiment = get_sentiment(text)
-    print 'sentiment is!!!!!!!!!!'
-    print sentiment
-    top_scoring_intent = get_intent(text)
-    keywords = get_keywords(text)
+    sentiment = get_sentiment(text).get('docSentiment', {})
+    top_scoring_intent = get_intent(text).get('topScoringIntent',{})
+    keywords = get_keywords(text).get('keywords', [{'text': ''}])
+    if keywords == {}:
+      # not likely, but sometimes it happens (when a API error occurs)
+      keywords = [{'text': ''}]
     response = {
         'originalText': text,
         'replies': [get_sentence(text, sentiment.get('type'), top_scoring_intent.get('intent'), keywords[0].get('text'))],
